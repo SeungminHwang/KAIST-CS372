@@ -3,8 +3,15 @@ from khaiii import KhaiiiApi
 api = KhaiiiApi()
 
 
+success = 0
+fail = 0
+
 CFG_str = """
 S -> 주어 목적어 서술어_종결형
+S -> 주어 서술어_종결형
+S -> 주어 부사어 서술어_종결형
+S -> 주어 보어 서술어_종결형
+S -> 주어 목적어 부사어 서술어_종결형
 주어 -> 체언 JKS | 체언 JX
 목적어 -> 체언 JKO | 체언 JX 
 체언 -> NNG | NNP | NNB | NP | NR 
@@ -15,12 +22,7 @@ S -> 주어 목적어 서술어_종결형
 형용사 -> VA
 본용언 -> 기본_서술어 EC
 보조용언 -> VX | VX EP | VX EC | VX EP EC
-NP -> '그'
-JKS -> '가'
-NNG -> '팔'
-JKO -> '을'
-VV -> '뻗'
-EF -> '는다'                       
+SF -> '.'
 """
 
 #grammar = nltk.CFG.fromstring(CFG_str)
@@ -37,6 +39,7 @@ for line in f.readlines():
     #tag_seq_list.append(tag_seq)
     
     sentence = []
+    print(sent, end=" ")
     
     for word in api.analyze(sent):
         word_str = str(word)
@@ -62,11 +65,21 @@ for line in f.readlines():
     #print(sentence)
     rd_parser = nltk.RecursiveDescentParser(grammar)
     status = False
-    for tree in rd_parser.parse(sentence):
+    
+    sent = ['그', '가', '팔', '을', '뻗', '는다']
+    #print(sent == sentence[:-1])
+    #print(CFG_str)
+    for tree in rd_parser.parse(sentence[:-1]):
         status = True
         print(tree)
-    #print(CFG_str)
     if status:
-        print("Success")
+        success += 1
+        print("Success", end=" ")
+        print(success)
+        
     else:
-        print("Failed")
+        fail += 1
+        print("Failed", end=" ")
+        print(fail)
+        
+        
