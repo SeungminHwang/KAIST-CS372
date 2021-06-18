@@ -13,7 +13,10 @@ class Node(object):
                 return child
         return self.add_child(Node(query_tag))
     def __str__(self):
-        return "Node: " + self.tag
+        output_str = ""
+        for child in self.children:
+            output_str += child.tag + " "
+        return output_str#"Node: " + self.tag
     def checkout(self, tag):
         for child in self.children:
             #print(tag, child.tag)
